@@ -18,7 +18,9 @@
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public string Image { get; set; } // Added property for image data
     }
+
 
     public class Order
     {
@@ -26,8 +28,11 @@
         public DateTime OrderDate { get; set; }
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
+        public int OrderStatusId { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
+
     public class Category
     {
         public int Id { get; set; }
@@ -43,6 +48,12 @@
         public Product Product { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+    }
+    public class OrderStatus
+    {
+        public int Id { get; set; }
+        public string Status { get; set; }
+        public ICollection<Order> Orders { get; set; } // Many-to-One relationship
     }
 
 }

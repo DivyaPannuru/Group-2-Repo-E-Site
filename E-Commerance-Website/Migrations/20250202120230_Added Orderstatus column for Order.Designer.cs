@@ -4,6 +4,7 @@ using E_Commerance_Website;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerance_Website.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250202120230_Added Orderstatus column for Order")]
+    partial class AddedOrderstatuscolumnforOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace E_Commerance_Website.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.Customer", b =>
@@ -65,7 +68,7 @@ namespace E_Commerance_Website.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.Order", b =>
@@ -82,30 +85,26 @@ namespace E_Commerance_Website.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("OrderStatusId");
-
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.OrderDetail", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -114,30 +113,11 @@ namespace E_Commerance_Website.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
+                    b.HasKey("OrderId", "ProductId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails", (string)null);
-                });
-
-            modelBuilder.Entity("E_Commerance_Website.OrderStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OrderStatus", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.Product", b =>
@@ -151,10 +131,6 @@ namespace E_Commerance_Website.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -166,7 +142,7 @@ namespace E_Commerance_Website.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.Order", b =>
@@ -177,15 +153,7 @@ namespace E_Commerance_Website.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commerance_Website.OrderStatus", "OrderStatus")
-                        .WithMany("Orders")
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
-
-                    b.Navigation("OrderStatus");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.OrderDetail", b =>
@@ -231,11 +199,6 @@ namespace E_Commerance_Website.Migrations
             modelBuilder.Entity("E_Commerance_Website.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("E_Commerance_Website.OrderStatus", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("E_Commerance_Website.Product", b =>

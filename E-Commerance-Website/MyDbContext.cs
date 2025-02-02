@@ -41,10 +41,17 @@ namespace E_Commerance_Website
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
 
+            modelBuilder.Entity<OrderDetail>()
+                .HasKey(od => od.Id); 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
+            modelBuilder.Entity<Order>()
+           .HasOne(o => o.OrderStatus)
+           .WithMany(os => os.Orders)
+           .HasForeignKey(o => o.OrderStatusId);
+
         }
     }
 }
