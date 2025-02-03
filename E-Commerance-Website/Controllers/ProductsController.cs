@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using E_Commerance_Website;
+using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace E_Commerance_Website.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly MyDbContext _context;
+        private readonly CartService _cartService;
 
-        public ProductsController(MyDbContext context)
+        public ProductsController(MyDbContext context,CartService cartservice)
         {
             _context = context;
+            _cartService = cartservice;
         }
 
         // GET: Products
@@ -45,6 +49,11 @@ namespace E_Commerance_Website.Controllers
         }
 
         // Other action methods for Create, Edit, Delete...
+        public IActionResult AddToCart(int productid)
+        {
+            _cartService.AddToCart(productid);
+            return RedirectToAction("Index");
+        }
     }
 
 }
