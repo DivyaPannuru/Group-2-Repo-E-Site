@@ -14,12 +14,11 @@ namespace E_Commerance_Website.Controllers
     public class ProductsController : Controller
     {
         private readonly MyDbContext _context;
-        private readonly CartService _cartService;
 
-        public ProductsController(MyDbContext context,CartService cartservice)
+        public ProductsController(MyDbContext context)
         {
             _context = context;
-            _cartService = cartservice;
+            
         }
 
         // GET: Products
@@ -51,7 +50,6 @@ namespace E_Commerance_Website.Controllers
         // Other action methods for Create, Edit, Delete...
         public IActionResult AddToCart(int productid)
         {
-            _cartService.AddToCart(productid);
             return RedirectToAction("Index");
         }
     }
