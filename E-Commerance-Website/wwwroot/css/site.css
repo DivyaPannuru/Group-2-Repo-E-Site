@@ -20,3 +20,25 @@ html {
 body {
   margin-bottom: 60px;
 }
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px; /* Adjust height as needed */
+}
+
+.nav-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+    .nav-container ul li {
+        margin-left: 15px; /* Adjust spacing between links */
+    }
+
+.nav-container .right-item {
+    margin-left: auto;
+}
+
