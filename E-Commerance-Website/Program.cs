@@ -33,15 +33,12 @@ namespace E_Commerance_Website
                         loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
                         var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
                         var config = app.ApplicationServices.GetRequiredService<IConfiguration>();
-
-app.UseMiddleware<CustomExceptionMiddleware>();
-
                         if (env.IsDevelopment())
                         {
                             app.UseExceptionHandler("/Home/Error");
                             app.UseHsts();
                         }
-
+                        app.UseMiddleware<CustomExceptionMiddleware>();
                         app.UseHttpsRedirection();
                         app.UseStaticFiles();
 
