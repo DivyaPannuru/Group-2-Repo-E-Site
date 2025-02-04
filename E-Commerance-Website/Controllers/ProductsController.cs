@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using E_Commerance_Website.Middlewares;
 using E_Commerance_Website.Filters;
 using E_Commerance_Website.Services;
 using System.Net.Cache;
 namespace E_Commerance_Website.Controllers
 {
-    
+
     [AuthorizeUser]
     public class ProductsController : Controller
     {

@@ -8,6 +8,32 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .bs-example {
+            height: 220px;
+        }
+
+        .centerlook {
+            padding-left: 400px;
+            font-weight: bold;
+            width: 1000px;
+        }
+
+        .error {
+            padding-left: 400px;
+            font-weight: bold;
+            width: 1000px;
+            color: red;
+        }
+
+        .loginbtn {
+            padding-left: 500px;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -16,11 +42,32 @@
             <span style="color:red;font-weight:bold;">@ViewBag.Error</span>
         }
     </div>
-    <form method="post" asp-action="Login">
-        <input type="text" name="username" placeholder="Enter Username" />
-        <input type="password" name="password" placeholder="Enter Password" />
-        <input type="submit" value="Login" />
-    </form>
-
+    
+        
+     @using (Html.BeginForm())  
+    {  
+        <div class="bs-example" style="border:2px solid gray;">  
+  
+            <div class="form-group centerlook">  
+                <h1> Login </h1>  
+            </div>  
+            <div class="form-group centerlook">  
+                <label>User Name: </label>
+                <input type="text" name="username" placeholder="Enter Username" />
+                 
+            </div>  
+            <div class="form-group centerlook">  
+                <label>Password:</label>
+                <input type="password" name="password" placeholder="Enter Password" />
+                  
+  
+            </div>  
+            
+            <div class="loginbtn">    
+                <input type="submit" value="Login" class="btn btn-primary" />    
+            </div>  
+        </div>  
+    }  
+    
 </body>
 </html>
