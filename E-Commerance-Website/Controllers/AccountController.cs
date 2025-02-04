@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace coreMvcApplication.Controllers
+namespace E_Commerance_Website.Controllers
 {
     public class AccountController : Controller
     {     
