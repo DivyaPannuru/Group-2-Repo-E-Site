@@ -15,6 +15,7 @@ namespace E_Commerance_Website.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("The main page has been accessed");
             return View();
         }
 
