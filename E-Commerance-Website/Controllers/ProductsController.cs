@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using E_Commerance_Website.Middlewares;
 using E_Commerance_Website.Filters;
 using E_Commerance_Website.Services;
+using System.Net.Cache;
 namespace E_Commerance_Website.Controllers
 {
     
@@ -27,7 +28,7 @@ namespace E_Commerance_Website.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            ViewBag.CartItemCount = _cartService.GetCartItemCount();
+            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
             return View(await _context.Products.Include(p => p.Category).ToListAsync());
         }
 
@@ -54,8 +55,19 @@ namespace E_Commerance_Website.Controllers
         // Other action methods for Create, Edit, Delete...
         public IActionResult AddToCart(int productid)
         {
-            _cartService.AddProduct(productid);
+           
+            Product product = _context.Products
+                .FirstOrDefault(m => m.Id == productid); 
+           // if(HttpContext.Session.SetObjectAsJson("Product", product)!=null)
+            HttpContext.Session.SetObjectAsJson("Product", product);
+            _cartService.AddProduct(product);
             return RedirectToAction("Index");
+        }
+        public IActionResult ViewCart()
+        {
+            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
+            var cartItems = _cartService.GetCartItems();
+            return View(cartItems);
         }
     }
 

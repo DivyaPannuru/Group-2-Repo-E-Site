@@ -2,31 +2,54 @@
 
 namespace E_Commerance_Website
 {
+    using Microsoft.AspNetCore.Http;
+    using System.Collections.Generic;
 
     public interface ICartService
     {
-        void AddProduct(int productId);
-        int GetCartItemCount();
+        void AddProduct(Product product);
+        List<Product> GetCartItems();
     }
 
     public class CartService : ICartService
     {
-        private List<int> _cart;
+        private const string CartSessionKey = "Cart";
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CartService()
+        public CartService(IHttpContextAccessor httpContextAccessor)
         {
-            _cart = new List<int>();
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public void AddProduct(int productId)
+        public void AddProduct(Product product)
         {
-            _cart.Add(productId);
+            var cart = GetCartFromSession();
+            cart.Add(product);
+            SaveCartToSession(cart);
         }
 
-        public int GetCartItemCount()
+        public List<Product> GetCartItems()
         {
-            return _cart.Count;
+            return GetCartFromSession();
+        }
+
+        private List<Product> GetCartFromSession()
+        {
+            var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Product>>(CartSessionKey);
+            if (cart == null)
+            {
+                cart = new List<Product>();
+            }
+            return cart;
+        }
+
+        private void SaveCartToSession(List<Product> cart)
+        {
+            _httpContextAccessor.HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
         }
     }
+
+   
+
 
 }
