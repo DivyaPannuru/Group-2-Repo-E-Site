@@ -3,8 +3,7 @@ using E_Commerance_Website.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddScoped<CartService>();
-// Add services to the container.
+builder.Services.AddSingleton<ICartService, CartService>();// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 // Add DbContext configuration

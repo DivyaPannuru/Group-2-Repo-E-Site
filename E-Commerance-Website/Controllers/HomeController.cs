@@ -15,6 +15,8 @@ namespace E_Commerance_Website.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetInt32("CartCount") <= 0)
+                HttpContext.Session.SetInt32("CartCount", 0);
             return View();
         }
 
