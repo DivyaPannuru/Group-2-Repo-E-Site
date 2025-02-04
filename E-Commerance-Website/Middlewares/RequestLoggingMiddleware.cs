@@ -20,7 +20,8 @@ namespace E_Commerance_Website.Middlewares
             // Request Logic
             // Log Request Information:
             var stopwatch = Stopwatch.StartNew();
-            _logger.LogInformation($" - Incoming Request: {httpContext.Request.Method} | {httpContext.Request.Path}");
+            var message = $" - Incoming Request: {httpContext.Request.Method} | {httpContext.Request.Path}";
+            await File.AppendAllTextAsync("C:/Logs/RequestLogs.txt", message);
             await _next(httpContext);
             // Response Logic
             stopwatch.Stop();
