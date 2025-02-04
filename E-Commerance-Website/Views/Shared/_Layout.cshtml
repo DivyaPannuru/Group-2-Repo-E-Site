@@ -25,6 +25,8 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("UserSession") != null)
+                        {
                         <li class="nav-item">
                             <a class="nav-link btn-primary text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                         </li>
@@ -37,11 +39,37 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                         </li>
-                        <li class="nav-item align-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                            </li>
+                        <li class="nav-item">
+                            <span class="nav-link text-dark">
+                                Welcome, @HttpContextAccessor.HttpContext.Session.GetString("UserSession")
+                                (@HttpContextAccessor.HttpContext.Session.GetString("UserRole"))
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-danger text-white ms-2" asp-controller="Account" asp-action="logout">Logout</a>
+                        </li>
+                        <li class="nav-item">
                                 <div>
-                                    <a class="nav-link" asp-area="" asp-controller="Products" asp-action="ProductItem"><span>@cartItemCount items</span></a>
+                                    <span>Cart: @cartItemCount items</span>
                                 </div>
                         </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-primary text-white ms-2" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -55,7 +83,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - coreMvcApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Shopping Mart - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

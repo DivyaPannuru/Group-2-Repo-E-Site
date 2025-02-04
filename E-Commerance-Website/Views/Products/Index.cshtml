@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.Image)
             </th>
             <th></th>
-            <th class="img-thumbnail">AddToCart</th>
+            <th>AddToCart</th>
         </tr>
     </thead>
     <tbody>
@@ -45,17 +45,23 @@
                 </td>
 
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    <a asp-controller="CartItems" asp-action="Create" asp-route-id="@item.Id">AddToCart</a>
+                   @*  <a asp-controller="CartItems" asp-action="Create" asp-route-id="@item.Id">AddToCart</a> *@
             </td>
-            <td>
+           @*  <td>
+                    <form asp-controller="CartItems" asp-action="Create" method="post">
+                        <input type="hidden" name="productId" value="@item.Id" />
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+            </td> *@
+                <td>
                     <form asp-action="AddToCart" method="post">
                         <input type="hidden" name="productId" value="@item.Id" />
                         <button type="submit" class="btn btn-primary">Add to Cart</button>
                     </form>
-            </td>
+                </td>
         </tr>
 }
     </tbody>

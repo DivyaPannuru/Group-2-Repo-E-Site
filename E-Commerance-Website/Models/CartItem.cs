@@ -9,6 +9,7 @@ namespace E_Commerance_Website.Models
         [ForeignKey("Products")]
         [Required]
         public int ProductId { get; set; }
+        [Required]
         public string Name { get; set; }    
         public decimal Price { get; set; }
         [Required]
