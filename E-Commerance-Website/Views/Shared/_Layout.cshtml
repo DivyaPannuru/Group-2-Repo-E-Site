@@ -48,14 +48,16 @@
                                 (@HttpContextAccessor.HttpContext.Session.GetString("UserRole"))
                             </span>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-danger text-white ms-2" asp-controller="Account" asp-action="logout">Logout</a>
-                        </li>
-                        <li class="nav-item">
+                       
+                            <li class="nav-item right-item" style="justify-content: flex-end;">
                                 <div>
-                                    <span>Cart: @cartItemCount items</span>
+                                    <button class="btn-lg">View Cart <span>(@cartItemCount items) </span>
+                                        </button>
                                 </div>
                         </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-danger text-white ms-2" asp-controller="Account" asp-action="logout">Logout</a>
+                            </li>
                         }
                         else
                         {
