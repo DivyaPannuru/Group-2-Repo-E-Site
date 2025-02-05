@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using E_Commerance_Website.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,7 +46,13 @@ namespace E_Commerance_Website.Controllers
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id");
             ViewData["OrderStatusId"] = new SelectList(_context.Set<OrderStatus>(), "Id", "Id");
-            return View();
+            var Order = new Order
+            {
+                OrderDate = DateTime.Now,
+                OrderStatusId = 1,
+                CustomerId = 1
+            };
+            return View(Order);
         }
 
         // POST: Orders/Create
@@ -54,18 +61,15 @@ namespace E_Commerance_Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart([Bind("Id,OrderDate,CustomerId,OrderStatusId")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
+        {         
+           
                 _context.Add(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            ViewData["OrderStatusId"] = new SelectList(_context.Set<OrderStatus>(), "Id", "Id", order.OrderStatusId);
-            return View(order);
+                return RedirectToAction(nameof(Index));           
+           
         }
 
+        [AuthorizeRole(role:"Admin")]
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -94,10 +98,7 @@ namespace E_Commerance_Website.Controllers
             if (id != order.Id)
             {
                 return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
+            }            
                 try
                 {
                     _context.Update(order);
@@ -115,10 +116,10 @@ namespace E_Commerance_Website.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            ViewData["OrderStatusId"] = new SelectList(_context.Set<OrderStatus>(), "Id", "Id", order.OrderStatusId);
-            return View(order);
+            
+            //ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
+            //ViewData["OrderStatusId"] = new SelectList(_context.Set<OrderStatus>(), "Id", "Id", order.OrderStatusId);
+            //return View(order);
         }
 
         // GET: Orders/Delete/5

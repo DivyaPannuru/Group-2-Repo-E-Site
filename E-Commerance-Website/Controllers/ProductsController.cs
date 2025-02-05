@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
 using E_Commerance_Website.Filters;
-using E_Commerance_Website.Services;
-using System.Net.Cache;
 namespace E_Commerance_Website.Controllers
 {
 
@@ -66,6 +64,13 @@ namespace E_Commerance_Website.Controllers
             ViewBag.CartItemCount = _cartService.GetCartItems().Count;
             var cartItems = _cartService.GetCartItems();
             return View(cartItems);
+        }
+
+        public IActionResult Submit()
+        {
+            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
+            var cartItems = _cartService.GetCartItems();
+            return RedirectToAction("AddToCart", "Orders");            
         }
     }
 
