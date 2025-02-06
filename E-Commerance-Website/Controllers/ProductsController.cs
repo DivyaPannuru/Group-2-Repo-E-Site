@@ -5,7 +5,7 @@ using E_Commerance_Website.Filters;
 namespace E_Commerance_Website.Controllers
 {
 
-    [AuthorizeUser]
+ 
     public class ProductsController : Controller
     {
         private readonly MyDbContext _context;

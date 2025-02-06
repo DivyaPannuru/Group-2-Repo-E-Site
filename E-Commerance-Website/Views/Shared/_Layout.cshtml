@@ -68,6 +68,20 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li> *@
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Orders</a>
+                            </li>
+                           
+                            <li class="nav-item right-item" style="justify-content: flex-end;">
+                                <div>
+                                    <a class="btn-lg" asp-action="ViewCart" asp-controller="Products">
+                                        View Cart <span>(@cartItemCount items) </span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link btn btn-primary text-white ms-2" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                         }
