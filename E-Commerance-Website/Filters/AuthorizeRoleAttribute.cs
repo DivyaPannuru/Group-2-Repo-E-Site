@@ -15,8 +15,12 @@ namespace E_Commerance_Website.Filters
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var sessionRole = context.HttpContext.Session.GetString("UserRole");
-            if (string.IsNullOrEmpty(sessionRole) || sessionRole != _role)
+            if (string.IsNullOrEmpty(sessionRole) )
             {
+                context.Result = new RedirectToActionResult("Login", "Account",null);
+            }
+            else if( sessionRole != _role)
+                {
                 context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
             }
             base.OnActionExecuting(context);

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
 using E_Commerance_Website.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace E_Commerance_Website.Controllers
 {
 
@@ -24,8 +25,9 @@ namespace E_Commerance_Website.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
-            return View(await _context.Products.Include(p => p.Category).ToListAsync());
+                var cartItems = _cartService.GetCartItems();
+                ViewBag.CartItemCount = _cartService.GetCartCount();
+                return View(await _context.Products.Include(p => p.Category).ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -49,28 +51,81 @@ namespace E_Commerance_Website.Controllers
         }
 
         // Other action methods for Create, Edit, Delete...
-        public IActionResult AddToCart(int productid)
+        [HttpPost]
+        public IActionResult AddToCart(int productId)
         {
-           
-            Product product = _context.Products
-                .FirstOrDefault(m => m.Id == productid); 
-           // if(HttpContext.Session.SetObjectAsJson("Product", product)!=null)
-            HttpContext.Session.SetObjectAsJson("Product", product);
-            _cartService.AddProduct(product);
+            //var product = new Product // Replace with actual product retrieval logic
+            //{
+            //    Id = productId,
+            //    Name = "Sample Product",
+            //    Price = 10.00m
+            //};
+            var product = (from a in _context.Products where a.Id == productId
+                          select a).FirstOrDefault(); 
+            _cartService.AddToCart(product);
+            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateQuantity(int productId, int quantity)
+        {
+            _cartService.UpdateQuantity(productId, quantity);
+            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
             return RedirectToAction("Index");
         }
         public IActionResult ViewCart()
         {
-            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
             var cartItems = _cartService.GetCartItems();
+            ViewBag.CartItemCount = _cartService.GetCartCount();
+      //      var cartItems = _cartService.GetCartItems();
             return View(cartItems);
         }
+        [HttpPost]
+        public IActionResult IncrementQuantity(int productId)
+        {
+            _cartService.IncrementQuantity(productId);
+            return RedirectToAction("ViewCart");
+        }
 
+        [HttpPost]
+        public IActionResult DecrementQuantity(int productId)
+        {
+            _cartService.DecrementQuantity(productId);
+            return RedirectToAction("ViewCart");
+        }
+        [AuthorizeRole("User")]
         public IActionResult Submit()
         {
-            ViewBag.CartItemCount = _cartService.GetCartItems().Count;
+            //ViewBag.CartItemCount = _cartService.GetCartItems().Count;
             var cartItems = _cartService.GetCartItems();
-            return RedirectToAction("AddToCart", "Orders");            
+            ////return RedirectToAction("AddToCart", "Orders");
+            //ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id");
+            //ViewData["OrderStatusId"] = new SelectList(_context.Set<OrderStatus>(), "Id", "Id");
+
+            //var Order = new Order
+            //{
+            //    OrderDate = DateTime.Now,
+            //    OrderStatusId = 1,
+            //    CustomerId = 1
+            //};
+            Order order = new Order();
+            order.Id= _context.Orders.Max(o => o.Id);
+            order.OrderStatus.Status = "Pending";
+            order.OrderDate = DateTime.Now;
+           
+            foreach (var cartItem in cartItems)
+            {
+                order.OrderDetails = [];
+                OrderDetail detail = new OrderDetail
+                {
+                    Quantity = 1,
+                    UnitPrice = cartItem.Product.Price,
+                    ProductId = cartItem.ProductId
+                };
+                order.OrderDetails.Add(detail);
+            }
+            return View(order);
         }
     }
 

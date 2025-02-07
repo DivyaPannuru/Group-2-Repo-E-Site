@@ -12,15 +12,16 @@ namespace E_Commerance_Website.Controllers
             { "Divya", ("password123", "User") }
         };
 
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(string username, string password, bool rememberMe)
+        public IActionResult Login(string username, string password, bool rememberMe, string returnUrl)
         {
-                        if (users.ContainsKey(username) && users[username].Password == password)
+            ViewData["ReturnUrl"] = returnUrl;
+            if (users.ContainsKey(username) && users[username].Password == password)
             {
                 HttpContext.Session.SetString("UserSession", username);
                 HttpContext.Session.SetString("UserRole", users[username].Role);
@@ -38,7 +39,16 @@ namespace E_Commerance_Website.Controllers
                         HttpOnly = true
                     });
                 }
-                return RedirectToAction("Index", "Home");
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                //return RedirectToAction("Index", "Home");
             }
 
             ViewBag.Error = "Invalid Credentials!";

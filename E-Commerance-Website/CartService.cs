@@ -1,55 +1,110 @@
-﻿using Newtonsoft.Json;
+﻿using E_Commerance_Website;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace E_Commerance_Website
+public interface ICartService
 {
-    using Microsoft.AspNetCore.Http;
-    using System.Collections.Generic;
+    void AddToCart(Product product);
+    void UpdateQuantity(int productId, int quantity);
+    List<cartItem> GetCartItems();
+    int GetCartCount();
+    void IncrementQuantity(int productId);
+    void DecrementQuantity(int productId);
+}
 
-    public interface ICartService
+public class CartService : ICartService
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private const string CartSessionKey = "Cart";
+
+    public CartService(IHttpContextAccessor httpContextAccessor)
     {
-        void AddProduct(Product product);
-        List<Product> GetCartItems();
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public class CartService : ICartService
+    public void AddToCart(Product product)
     {
-        private const string CartSessionKey = "Cart";
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        var cart = GetCartFromSession();
+        var existingItem = cart.FirstOrDefault(ci => ci.ProductId == product.Id);
 
-        public CartService(IHttpContextAccessor httpContextAccessor)
+        if (existingItem != null)
         {
-            _httpContextAccessor = httpContextAccessor;
+            existingItem.Quantity++;
+        }
+        else
+        {
+            cart.Add(new cartItem { ProductId = product.Id, Product = product, Quantity = 1 });
         }
 
-        public void AddProduct(Product product)
-        {
-            var cart = GetCartFromSession();
-            cart.Add(product);
-            SaveCartToSession(cart);
-        }
-
-        public List<Product> GetCartItems()
-        {
-            return GetCartFromSession();
-        }
-
-        private List<Product> GetCartFromSession()
-        {
-            var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Product>>(CartSessionKey);
-            if (cart == null)
-            {
-                cart = new List<Product>();
-            }
-            return cart;
-        }
-
-        private void SaveCartToSession(List<Product> cart)
-        {
-            _httpContextAccessor.HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
-        }
+        SaveCartToSession(cart);
     }
 
-   
+    public void UpdateQuantity(int productId, int quantity)
+    {
+        var cart = GetCartFromSession();
+        var cartItem = cart.FirstOrDefault(ci => ci.ProductId == productId);
 
+        if (cartItem != null && quantity > 0)
+        {
+            cartItem.Quantity = quantity;
+        }
+        else if (cartItem != null)
+        {
+            cart.Remove(cartItem);
+        }
+
+        SaveCartToSession(cart);
+    }
+
+    public List<cartItem> GetCartItems()
+    {
+        return GetCartFromSession();
+    }
+    public int GetCartCount()
+    {
+        var cart = GetCartFromSession();
+        return cart.Sum(ci => ci.Quantity);
+    }
+    private List<cartItem> GetCartFromSession()
+    {
+        var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<cartItem>>(CartSessionKey);
+        if (cart == null)
+        {
+            cart = new List<cartItem>();
+        }
+        return cart;
+    }
+
+    private void SaveCartToSession(List<cartItem> cart)
+    {
+        _httpContextAccessor.HttpContext.Session.SetObjectAsJson(CartSessionKey, cart);
+    }
+
+    public void IncrementQuantity(int productId)
+    {
+        var cart = GetCartFromSession();
+        var cartItem = cart.FirstOrDefault(ci => ci.ProductId == productId);
+
+        if (cartItem != null)
+        {
+            cartItem.Quantity++;
+        }
+
+        SaveCartToSession(cart);
+    }
+
+    public void DecrementQuantity(int productId)
+    {
+        var cart = GetCartFromSession();
+        var cartItem = cart.FirstOrDefault(ci => ci.ProductId == productId);
+
+        if (cartItem != null && cartItem.Quantity > 1)
+        {
+            cartItem.Quantity--;
+        }
+
+        SaveCartToSession(cart);
+    }
 
 }
+

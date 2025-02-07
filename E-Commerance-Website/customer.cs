@@ -55,5 +55,10 @@
         public string Status { get; set; }
         public ICollection<Order> Orders { get; set; } // Many-to-One relationship
     }
-
-}
+    public class cartItem
+    {
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
+        public int Quantity { get; set; }
+    }
+    }

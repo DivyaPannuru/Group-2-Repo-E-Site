@@ -1,5 +1,6 @@
 ﻿@{
     Layout = null;
+    var returnUrl = ViewData["ReturnUrl"] as string;
 }
 
 <!DOCTYPE html>
@@ -63,7 +64,9 @@
   
             </div>  
             
-            <div class="loginbtn">    
+            <div class="loginbtn">
+
+                <!-- <input type="hidden" asp-for="returnUrl" value="@ViewData["ReturnUrl"]" />-->
                 <input type="submit" value="Login" class="btn btn-primary" />    
             </div>  
         </div>  

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<E_Commerance_Website.Product>
+﻿@model IEnumerable<E_Commerance_Website.cartItem>
 @{
     Layout = "_Layout";
 }
@@ -12,14 +12,21 @@
                     @Html.DisplayNameFor(model => model.Order)
                 </th> *@
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.Product.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Price)
+                    @Html.DisplayNameFor(model => model.Product.Price)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Image)
+                    @Html.DisplayNameFor(model => model.Product.Image)
                 </th>
+                <th>
+                    Action
+                </th>
+                <th>
+                    
+                </th>
+                <th>Total Price </th>
             </tr>
         </thead>
         <tbody>
@@ -27,16 +34,34 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.Product.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Price)
+                        @Html.DisplayFor(modelItem => item.Product.Price)
                     </td>
                     @* <td>
                         @Html.DisplayFor(modelItem => item.Product.CategoryId)
                     </td> *@
                     <td>
-                        <img src="@Html.DisplayFor(modelItem => item.Image)" width="100px;" height="100px" alt="None" class="img-thumbnail" />
+                        <img src="@Html.DisplayFor(modelItem => item.Product.Image)" width="100px;" height="100px" alt="None" class="img-thumbnail" />
+                    </td>
+                    <td colspan="3">
+                        <div>
+                        <form method="post" asp-action="IncrementQuantity">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit">+</button>
+                        </form>                         <span>@item.Quantity</span>
+                        <form method="post" asp-action="DecrementQuantity">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit">-</button>
+                        </form>
+                        </div>
+                    </td>
+                    <td>
+                        @(item.Product.Price * item.Quantity)
+                    </td>
+                    <td>
+                       
                     </td>
                 </tr>
             }
@@ -49,3 +74,7 @@
        <!--<a asp-action="Edit" asp-route-id="Model?.id">Edit</a> | -->
     <a asp-action="Index">Back to List</a>
 </div>
+<script>
+    const Increase()=> 
+
+</script>
